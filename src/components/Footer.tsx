@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState, type FormEvent } from "react";
 import { motion } from "framer-motion";
 
 type FooterProps = {
@@ -15,11 +16,11 @@ type FooterProps = {
   linkedin: string;
 };
 
-const LABELS: Record<string, { rights: string; privacy: string; nav: string }> = {
-  pl: { rights: "Wszelkie prawa zastrzeżone.", privacy: "Polityka prywatności", nav: "Nawigacja" },
-  en: { rights: "All rights reserved.", privacy: "Privacy Policy", nav: "Navigation" },
-  uk: { rights: "Усі права захищено.", privacy: "Політика конфіденційності", nav: "Навігація" },
-  ru: { rights: "Все права защищены.", privacy: "Политика конфиденциальности", nav: "Навигация" },
+const LABELS: Record<string, { rights: string; privacy: string; nav: string; subscribeTitle: string; subscribePlaceholder: string; subscribeButton: string; subscribeSuccess: string }> = {
+  pl: { rights: "Wszelkie prawa zastrzeżone.", privacy: "Polityka prywatności", nav: "Nawigacja", subscribeTitle: "Zamów rozmowę telefoniczną", subscribePlaceholder: "Twój numer telefonu", subscribeButton: "Wyślij", subscribeSuccess: "Dziękujemy! Oddzwonimy wkrótce." },
+  en: { rights: "All rights reserved.", privacy: "Privacy Policy", nav: "Navigation", subscribeTitle: "Request a callback", subscribePlaceholder: "Your phone number", subscribeButton: "Send", subscribeSuccess: "Thank you! We will call you back soon." },
+  uk: { rights: "Усі права захищено.", privacy: "Політика конфіденційності", nav: "Навігація", subscribeTitle: "Замовити дзвінок", subscribePlaceholder: "Ваш номер телефону", subscribeButton: "Надіслати", subscribeSuccess: "Дякуємо! Ми скоро вам зателефонуємо." },
+  ru: { rights: "Все права защищены.", privacy: "Политика конфиденциальности", nav: "Навигация", subscribeTitle: "Заказать звонок", subscribePlaceholder: "Ваш номер телефона", subscribeButton: "Отправить", subscribeSuccess: "Спасибо! Мы скоро вам перезвоним." },
 };
 
 export default function Footer({
@@ -36,6 +37,12 @@ export default function Footer({
   const t = LABELS[locale] || LABELS.pl;
   const base = `/${locale}`;
   const year = 2026;
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleSubscribe = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
     <motion.footer
@@ -75,7 +82,7 @@ export default function Footer({
 
           <div>
             <p className="text-xs uppercase tracking-[0.2em] text-[#B92D2D] font-semibold mb-4">Social</p>
-            <div className="flex gap-4">
+            <div className="flex gap-4 mb-6">
               <a href={facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:text-white transition-colors">
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5 3.66 9.15 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.79 8.44-4.94 8.44-9.94Z"/></svg>
               </a>
@@ -83,10 +90,31 @@ export default function Footer({
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.03-1.85-3.03-1.85 0-2.14 1.45-2.14 2.94v5.66H9.36V9h3.41v1.56h.05c.47-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.56V9h3.56v11.45Z"/></svg>
               </a>
             </div>
+            <p className="text-xs uppercase tracking-[0.2em] text-[#B92D2D] font-semibold mb-3">{t.subscribeTitle}</p>
+            {submitted ? (
+              <p className="text-sm text-white">{t.subscribeSuccess}</p>
+            ) : (
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-2">
+                <input
+                  type="tel"
+                  name="callbackPhone"
+                  required
+                  placeholder={t.subscribePlaceholder}
+                  className="w-full sm:w-auto flex-1 min-w-0 bg-transparent border border-white/20 px-3 py-2 text-sm text-white placeholder:text-gray-500 focus:outline-none focus:border-[#B92D2D] transition-colors"
+                />
+                <button
+                  type="submit"
+                  className="px-4 py-2 bg-[#B92D2D] text-white text-xs font-semibold uppercase tracking-wider hover:bg-[#D63838] transition-colors duration-300 shrink-0"
+                >
+                  {t.subscribeButton}
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
         <div className="border-t border-white/10 mt-10 pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+
           <p>© {year} {brandFull}. {t.rights}</p>
           <Link href={`${base}/privacy`} className="hover:text-white transition-colors">{t.privacy}</Link>
         </div>

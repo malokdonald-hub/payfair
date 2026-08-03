@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageSection from "@/components/PageSection";
+import CtaCall from "@/components/CtaCall";
 import contentPl from "../../../../data/content.pl.json";
 import contentEn from "../../../../data/content.en.json";
 import contentUk from "../../../../data/content.uk.json";
@@ -32,6 +33,7 @@ export default async function ServicesPage({ params }: { params: Promise<{ local
     <>
       <Header locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
       <PageSection html={data.services.jsx} />
+      <CtaCall locale={locale} phone={siteConfig.phone} />
       <Footer
         locale={locale}
         brandFull={siteConfig.brandFull}
