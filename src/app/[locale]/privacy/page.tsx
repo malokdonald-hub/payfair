@@ -14,24 +14,26 @@ const CONTENT: Record<string, typeof contentPl> = {
   ru: contentRu,
 };
 
-export function generateMetadata({ params }: { params: { locale: string } }): Metadata {
-  const data = CONTENT[params.locale] || CONTENT.pl;
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const data = CONTENT[locale] || CONTENT.pl;
   return {
     title: data.privacy.title,
     description: data.privacy.meta_description,
   };
 }
 
-export default function PrivacyPage({ params }: { params: { locale: string } }) {
-  const data = CONTENT[params.locale] || CONTENT.pl;
+export default async function PrivacyPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const data = CONTENT[locale] || CONTENT.pl;
   const { siteConfig } = data;
 
   return (
     <>
-      <Header locale={params.locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
+      <Header locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
       <PageSection html={data.privacy.jsx} />
       <Footer
-        locale={params.locale}
+        locale={locale}
         brandFull={siteConfig.brandFull}
         address={siteConfig.address}
         phone={siteConfig.phone}
