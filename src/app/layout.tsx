@@ -21,8 +21,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  params,
 }: {
   children: React.ReactNode;
-  params: { locale: string };
 }) {
+  return (
+    <html lang="pl">
+      <body className={`${playfair.variable} ${montserrat.variable} antialiased`}>
+        {children}
+      </body>
+    </html>
+  );
+}
