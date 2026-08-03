@@ -4,11 +4,14 @@ export function generateStaticParams() {
   return [{ locale: "pl" }, { locale: "en" }, { locale: "uk" }, { locale: "ru" }];
 }
 
-export default function LocaleLayout({
-  children,
-}: {
+type LocaleLayoutProps = {
   children: ReactNode;
-  params: { locale: string };
-}) {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
+  const { locale }: { locale: string } = await params;
+  void locale;
+
   return <div className="font-body flex flex-col min-h-full">{children}</div>;
 }
