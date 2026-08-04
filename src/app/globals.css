@@ -27,8 +27,132 @@
   --font-body: var(--font-montserrat), system-ui, sans-serif;
 }
 
+html {
+  overflow-x: hidden;
+}
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), system-ui, sans-serif;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Ensure large screens (xl: 1280px+) don't let content stretch edge-to-edge */
+@media (min-width: 1280px) {
+  .max-w-7xl {
+    max-width: 1280px;
+  }
+}
+
+/* Minimum 44px touch targets on mobile for buttons and form fields */
+@media (max-width: 767px) {
+  .page-section button,
+  .page-section a[class*="bg-"],
+  .page-section input,
+  .page-section textarea,
+  .page-section select,
+  button,
+  input[type="submit"],
+  input[type="button"],
+  input[type="tel"],
+  input[type="text"],
+  input[type="email"],
+  select {
+    min-height: 44px;
+  }
+}
+
+/* Styled native FAQ accordion */
+details.faq-item {
+  transition: background-color 0.3s ease;
+}
+
+details.faq-item summary {
+  list-style: none;
+}
+
+details.faq-item summary::-webkit-details-marker {
+  display: none;
+}
+
+details.faq-item .faq-icon {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+details.faq-item[open] .faq-icon {
+  transform: rotate(180deg);
+  color: var(--color-accentHover, #D63838);
+}
+
+details.faq-item[open] summary {
+  color: var(--color-accent, #B92D2D);
+}
+
+details.faq-item .faq-content {
+  animation: faqFadeIn 0.35s ease;
+}
+
+@keyframes faqFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Hover & focus micro-interactions for content injected via dangerouslySetInnerHTML --- */
+
+/* Card-like containers (service cards, info blocks, etc.) get a gentle lift + shadow on hover */
+.page-section [class*="rounded-2xl"],
+.page-section [class*="rounded-xl"] {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.page-section [class*="rounded-2xl"]:hover,
+.page-section [class*="rounded-xl"]:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px -8px rgba(10, 10, 10, 0.18);
+}
+
+/* Buttons and button-like links get a subtle scale + lift on hover */
+.page-section button,
+.page-section a[class*="bg-"] {
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.page-section button:hover,
+.page-section a[class*="bg-"]:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 20px -6px rgba(10, 10, 10, 0.25);
+}
+
+.page-section button:active,
+.page-section a[class*="bg-"]:active {
+  transform: translateY(0) scale(0.99);
+}
+
+/* Visible focus ring for keyboard users on interactive elements */
+.page-section a:focus-visible,
+.page-section button:focus-visible,
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-accent, #B92D2D);
+  outline-offset: 2px;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

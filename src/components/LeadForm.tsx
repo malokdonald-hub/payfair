@@ -71,20 +71,22 @@ export default function LeadForm({ locale }: LeadFormProps) {
           <p className="text-[#B92D2D] font-semibold">{t.success}</p>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4">
-            <input
-              type="text"
-              name="name"
-              placeholder={t.name}
-              required
-              className="w-full border border-[#E5E5E5] px-4 py-3 text-sm bg-white focus:outline-none focus:border-[#B92D2D] transition-colors"
-            />
-            <input
-              type="tel"
-              name="phone"
-              placeholder={t.phone}
-              required
-              className="w-full border border-[#E5E5E5] px-4 py-3 text-sm bg-white focus:outline-none focus:border-[#B92D2D] transition-colors"
-            />
+             <input
+               type="text"
+               name="name"
+               placeholder={t.name}
+               aria-label={t.name}
+               required
+               className="w-full border border-[#E5E5E5] px-4 py-3 text-sm bg-white focus:outline-none focus:border-[#B92D2D] transition-colors"
+             />
+             <input
+               type="tel"
+               name="phone"
+               placeholder={t.phone}
+               aria-label={t.phone}
+               required
+               className="w-full border border-[#E5E5E5] px-4 py-3 text-sm bg-white focus:outline-none focus:border-[#B92D2D] transition-colors"
+             />
             <button
               type="submit"
               className="px-8 py-3 bg-[#B92D2D] text-white font-semibold text-sm uppercase tracking-wider hover:bg-[#D63838] transition-colors duration-300 whitespace-nowrap"
