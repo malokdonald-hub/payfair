@@ -156,3 +156,6 @@ button:focus-visible {
     scroll-behavior: auto !important;
   }
 }
+
+html { overflow-x: hidden; }
+body { overflow-x: hidden; }
