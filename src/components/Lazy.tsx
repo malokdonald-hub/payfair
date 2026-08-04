@@ -14,9 +14,7 @@ export const LazyHeader = dynamic(() => import("@/components/Header"), {
   loading: () => <div className="h-16 md:h-20 bg-[#0A0A0A]" aria-hidden="true" />,
 });
 
-export const LazyPageSection = dynamic(() => import("@/components/PageSection"), {
-  ssr: false,
-});
+export const LazyPageSection = dynamic(() => import("@/components/PageSection"));
 
 // Below-the-fold components wrapped in LazyClientWrapper (ssr: false)
 export const LazyFooter = lazyClient(() => import("@/components/Footer"));
