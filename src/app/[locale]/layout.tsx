@@ -1,25 +1,15 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
+import { getContent } from "@/lib/content";
 import { LazyFloatingContact } from "@/components/Lazy";
 import ScrollAnimator from "@/components/ScrollAnimator";
-import contentPl from "../../../data/content.pl.json";
-import contentEn from "../../../data/content.en.json";
-import contentUk from "../../../data/content.uk.json";
-import contentRu from "../../../data/content.ru.json";
+import { ContentProvider } from "@/contexts/ContentContext";
 
+const LOCALES = ["pl", "en", "uk", "ru"] as const;
 
 export function generateStaticParams() {
   return [{ locale: "pl" }, { locale: "en" }, { locale: "uk" }, { locale: "ru" }];
 }
-
-const contentByLocale: Record<string, typeof contentPl> = {
-  pl: contentPl,
-  en: contentEn,
-  uk: contentUk,
-  ru: contentRu,
-};
-
-const LOCALES = ["pl", "en", "uk", "ru"] as const;
 
 type LocaleLayoutProps = {
   children: ReactNode;
@@ -28,7 +18,7 @@ type LocaleLayoutProps = {
 
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
-  const content = contentByLocale[locale] ?? contentPl;
+  const content = getContent(locale);
   const { siteConfig } = content;
   const baseUrl = siteConfig.url;
 
@@ -81,19 +71,20 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale }: { locale: string } = await params;
-  const content = contentByLocale[locale] ?? contentPl;
+  const content = getContent(locale);
   const { siteConfig } = content;
 
   return (
-    <div className="font-body flex flex-col min-h-full">
-      <ScrollAnimator />
-      {children}
-      <LazyFloatingContact
-        phone={siteConfig.phone}
-        whatsapp={siteConfig.whatsapp}
-        telegram={siteConfig.telegram}
-      />
-
-    </div>
+    <ContentProvider content={content}>
+      <div className="font-body flex flex-col min-h-full">
+        <ScrollAnimator />
+        {children}
+        <LazyFloatingContact
+          phone={siteConfig.phone}
+          whatsapp={siteConfig.whatsapp}
+          telegram={siteConfig.telegram}
+        />
+      </div>
+    </ContentProvider>
   );
 }
