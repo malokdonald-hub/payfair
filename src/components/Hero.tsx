@@ -1,4 +1,44 @@
-import React from 'react';
+"use client";
+
+import React, { useEffect, useState } from 'react';
+
+const stats = [
+  { value: 22, suffix: '', label: 'lata praktyki' },
+  { value: 2000, suffix: '+', label: 'zakończonych spraw' },
+  { value: 97, suffix: '%', label: 'skuteczności' },
+  { value: 3, suffix: '', label: 'biura w Polsce' },
+];
+
+function AnimatedStat({ value, suffix }: { value: number; suffix: string }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    const duration = 1500;
+    const steps = 30;
+    const stepTime = Math.max(Math.floor(duration / steps), 20);
+    let current = 0;
+    const increment = value / steps;
+
+    const interval = setInterval(() => {
+      current += increment;
+      if (current >= value) {
+        setCount(value);
+        clearInterval(interval);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, stepTime);
+
+    return () => clearInterval(interval);
+  }, [value]);
+
+  return (
+    <span className="text-3xl sm:text-4xl font-bold text-white">
+      {count}
+      {suffix}
+    </span>
+  );
+}
 
 export default function Hero() {
   return (
@@ -26,6 +66,17 @@ export default function Hero() {
           <a href="/uslugi" className="px-8 py-4 border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-[#0A0A0A] transition-colors duration-300">
             Nasze usługi
           </a>
+        </div>
+
+        <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-3xl mx-auto">
+          {stats.map((stat) => (
+            <div key={stat.label} className="flex flex-col items-center gap-1">
+              <AnimatedStat value={stat.value} suffix={stat.suffix} />
+              <span className="text-sm sm:text-base text-gray-300 text-center">
+                {stat.label}
+              </span>
+            </div>
+          ))}
         </div>
       </div>
     </div>

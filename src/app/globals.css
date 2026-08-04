@@ -105,6 +105,22 @@ details.faq-item .faq-content {
   }
 }
 
+/* Scroll-triggered fade-in-up animation (used with IntersectionObserver) */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.6s ease forwards;
+}
+
 /* --- Hover & focus micro-interactions for content injected via dangerouslySetInnerHTML --- */
 
 /* Card-like containers (service cards, info blocks, etc.) get a gentle lift + shadow on hover */
@@ -159,3 +175,25 @@ button:focus-visible {
 
 html { overflow-x: hidden; }
 body { overflow-x: hidden; }
+
+/* Large screens (xl: 1280px+) — wider container, extra grid column, bigger H1 */
+@media (min-width: 1280px) {
+  .xl\:max-w-\[1440px\] {
+    max-width: 1440px;
+  }
+
+  .xl\:grid-cols-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  h1.xl\:text-7xl {
+    font-size: 4.5rem;
+    line-height: 1;
+  }
+}
+
+/* Safe-area aware top padding for fixed/sticky header on notched devices */
+header,
+.site-header {
+  padding-top: env(safe-area-inset-top);
+}

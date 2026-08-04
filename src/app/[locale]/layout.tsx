@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Metadata } from "next";
 import { LazyFloatingContact } from "@/components/Lazy";
+import ScrollAnimator from "@/components/ScrollAnimator";
 import contentPl from "../../../data/content.pl.json";
 import contentEn from "../../../data/content.en.json";
 import contentUk from "../../../data/content.uk.json";
@@ -85,6 +86,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
 
   return (
     <div className="font-body flex flex-col min-h-full">
+      <ScrollAnimator />
       {children}
       <LazyFloatingContact
         phone={siteConfig.phone}
