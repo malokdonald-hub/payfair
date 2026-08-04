@@ -61,11 +61,23 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 
+// Split the home jsx so the lead form can be placed right after the statistics block.
+function splitHomeJsx(jsx: string): [string, string] {
+  const statsStart = jsx.indexOf('<section class="bg-[#0A0A0A] border-t border-white/10 py-16">');
+  const aboutStart = jsx.indexOf('<section class="bg-white py-16 md:py-24">', statsStart);
+  if (statsStart === -1 || aboutStart === -1) {
+    return [jsx, ""];
+  }
+  return [jsx.slice(0, aboutStart), jsx.slice(aboutStart)];
+}
+
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const data = CONTENT[locale] || CONTENT.pl;
   const { siteConfig } = data;
   const baseUrl = siteConfig.url;
+  const [homeTop, homeRest] = splitHomeJsx(data.home.jsx);
+
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -119,9 +131,11 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <LazyHeader locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
-      <LazyPageSection html={data.home.jsx} />
+      <LazyPageSection html={homeTop} />
       <LazyLeadForm locale={locale} />
+      {homeRest && <LazyPageSection html={homeRest} />}
       <LazyFooter
+
         locale={locale}
         brandFull={siteConfig.brandFull}
         address={siteConfig.address}

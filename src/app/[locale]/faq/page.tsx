@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { LazyHeader, LazyFooter, LazyPageSection, LazyCtaCall } from "@/components/Lazy";
+import { LazyHeader, LazyFooter, LazyPageSection, LazyCtaCall, LazyLeadForm } from "@/components/Lazy";
+
 import contentPl from "../../../../data/content.pl.json";
 import contentEn from "../../../../data/content.en.json";
 import contentUk from "../../../../data/content.uk.json";
@@ -70,7 +71,9 @@ export default async function FaqPage({ params }: { params: Promise<{ locale: st
     <>
       <LazyHeader locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
       <LazyPageSection html={data.faq.jsx} />
+      <LazyLeadForm locale={locale} />
       <LazyCtaCall locale={locale} phone={siteConfig.phone} />
+
       <LazyFooter
         locale={locale}
         brandFull={siteConfig.brandFull}

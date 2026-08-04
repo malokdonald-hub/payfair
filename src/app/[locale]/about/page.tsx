@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { LazyHeader, LazyFooter, LazyPageSection, LazyCtaCall } from "@/components/Lazy";
+import { LazyHeader, LazyFooter, LazyPageSection, LazyCtaCall, LazyLeadForm } from "@/components/Lazy";
+
 import contentPl from "../../../../data/content.pl.json";
 import contentEn from "../../../../data/content.en.json";
 import contentUk from "../../../../data/content.uk.json";
@@ -61,16 +62,30 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 }
 
 
+// Split the about jsx so the lead form can be placed right after the portrait section.
+function splitAboutJsx(jsx: string): [string, string] {
+  const portraitStart = jsx.indexOf('<section class="bg-white py-16 md:py-24">');
+  const careerStart = jsx.indexOf('<section class="bg-[#FAFAFA] py-16 md:py-24">', portraitStart);
+  if (portraitStart === -1 || careerStart === -1) {
+    return [jsx, ""];
+  }
+  return [jsx.slice(0, careerStart), jsx.slice(careerStart)];
+}
+
 export default async function AboutPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const data = CONTENT[locale] || CONTENT.pl;
   const { siteConfig } = data;
+  const [aboutTop, aboutRest] = splitAboutJsx(data.about.jsx);
 
   return (
     <>
       <LazyHeader locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
-      <LazyPageSection html={data.about.jsx} />
+      <LazyPageSection html={aboutTop} />
+      <LazyLeadForm locale={locale} />
+      {aboutRest && <LazyPageSection html={aboutRest} />}
       <LazyCtaCall locale={locale} phone={siteConfig.phone} />
+
       <LazyFooter
         locale={locale}
         brandFull={siteConfig.brandFull}
