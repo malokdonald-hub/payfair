@@ -1,6 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
+import { pathMap, getLocalizedPath } from "./Header";
 
 const LOCALES = ["pl", "en", "uk", "ru"] as const;
 
@@ -15,13 +16,8 @@ export default function LanguageSwitcher({ locale, className = "" }: LanguageSwi
 
   const switchTo = (nextLocale: string) => {
     if (nextLocale === locale) return;
-    const segments = pathname.split("/").filter(Boolean);
-    if (segments.length > 0 && LOCALES.includes(segments[0] as (typeof LOCALES)[number])) {
-      segments[0] = nextLocale;
-    } else {
-      segments.unshift(nextLocale);
-    }
-    router.push(`/${segments.join("/")}`);
+    const newPath = getLocalizedPath(pathname, nextLocale);
+    router.push(newPath);
   };
 
   return (

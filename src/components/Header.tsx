@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import LanguageSwitcher from "./LanguageSwitcher";
 
@@ -12,6 +13,31 @@ type HeaderProps = {
   phone: string;
 };
 
+export const pathMap: Record<string, Record<string, string>> = {
+  '/': { pl: '/', en: '/', uk: '/', ru: '/' },
+  '/uslugi': { pl: '/uslugi', en: '/services', uk: '/послуги', ru: '/услуги' },
+  '/o-kancelarii': { pl: '/o-kancelarii', en: '/about', uk: '/про-канцелярію', ru: '/о-нас' },
+  '/cennik': { pl: '/cennik', en: '/prices', uk: '/ціни', ru: '/цены' },
+  '/blog': { pl: '/blog', en: '/blog', uk: '/блог', ru: '/блог' },
+  '/czeste-pytania': { pl: '/czeste-pytania', en: '/faq', uk: '/часто-питають', ru: '/частые-вопросы' },
+  '/kontakt': { pl: '/kontakt', en: '/contact', uk: '/контакти', ru: '/контакты' },
+};
+
+export const getLocalizedPath = (pathname: string, targetLocale: string): string => {
+  // Убираем локаль из пути, если она есть
+  const withoutLocale = pathname.replace(/^\/(pl|en|uk|ru)/, '') || '/';
+  // Находим базовый путь (без подстраниц) – для простоты пока только корневые страницы
+  if (pathMap[withoutLocale]) {
+    return pathMap[withoutLocale][targetLocale] || withoutLocale;
+  }
+  // Для подстраниц услуг – просто заменяем префикс
+  if (withoutLocale.startsWith('/uslugi/')) {
+    const slug = withoutLocale.replace('/uslugi/', '');
+    return `/${targetLocale}/uslugi/${slug}`;
+  }
+  return `/${targetLocale}${withoutLocale}`;
+};
+
 const NAV_ITEMS: Record<string, { home: string; services: string; about: string; prices: string; blog: string; contacts: string; faq: string }> = {
   pl: { home: "Strona główna", services: "Usługi", about: "O kancelarii", prices: "Cennik", blog: "Blog", contacts: "Kontakt", faq: "FAQ" },
   en: { home: "Home", services: "Services", about: "About", prices: "Pricing", blog: "Blog", contacts: "Contact", faq: "FAQ" },
@@ -20,18 +46,18 @@ const NAV_ITEMS: Record<string, { home: string; services: string; about: string;
 };
 
 export default function Header({ locale, brandName, phone }: HeaderProps) {
+  const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const t = NAV_ITEMS[locale] || NAV_ITEMS.pl;
-  const base = `/${locale}`;
 
   const links = [
-    { href: `${base}`, label: t.home },
-    { href: `${base}/services`, label: t.services },
-    { href: `${base}/about`, label: t.about },
-    { href: `${base}/prices`, label: t.prices },
-    { href: `${base}/blog`, label: t.blog },
-    { href: `${base}/faq`, label: t.faq },
-    { href: `${base}/contacts`, label: t.contacts },
+    { href: getLocalizedPath(pathname, locale), label: t.home },
+    { href: getLocalizedPath(pathname, locale) + "/services", label: t.services },
+    { href: getLocalizedPath(pathname, locale) + "/about", label: t.about },
+    { href: getLocalizedPath(pathname, locale) + "/prices", label: t.prices },
+    { href: getLocalizedPath(pathname, locale) + "/blog", label: t.blog },
+    { href: getLocalizedPath(pathname, locale) + "/faq", label: t.faq },
+    { href: getLocalizedPath(pathname, locale) + "/contacts", label: t.contacts },
   ];
 
   return (
@@ -43,7 +69,7 @@ export default function Header({ locale, brandName, phone }: HeaderProps) {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
-          <Link href={base} className="font-[Playfair_Display] text-xl md:text-2xl font-bold text-white">
+          <Link href={getLocalizedPath(pathname, locale)} className="font-[Playfair_Display] text-xl md:text-2xl font-bold text-white">
             {brandName}
           </Link>
 
