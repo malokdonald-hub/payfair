@@ -4,6 +4,7 @@ import contentPl from "../../../data/content.pl.json";
 import contentEn from "../../../data/content.en.json";
 import contentUk from "../../../data/content.uk.json";
 import contentRu from "../../../data/content.ru.json";
+import Hero from "@/components/Hero";
 
 export const dynamic = "force-static";
 
@@ -130,6 +131,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+      <Hero />
       <LazyHeader locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
       <LazyPageSection html={homeTop} />
       <LazyLeadForm locale={locale} />
@@ -150,5 +152,3 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     </>
   );
 }
-
-
