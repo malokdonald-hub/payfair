@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import LanguageSwitcher from "./LanguageSwitcher";
+
 
 type HeaderProps = {
   locale: string;
@@ -58,6 +60,7 @@ export default function Header({ locale, brandName, phone }: HeaderProps) {
           </nav>
 
           <div className="hidden lg:flex items-center gap-4">
+            <LanguageSwitcher locale={locale} />
             <a
               href={`tel:${phone.replace(/[^\d+]/g, "")}`}
               aria-label={phone}
@@ -66,6 +69,7 @@ export default function Header({ locale, brandName, phone }: HeaderProps) {
               {phone}
             </a>
           </div>
+
 
           <button
             type="button"
@@ -120,17 +124,26 @@ export default function Header({ locale, brandName, phone }: HeaderProps) {
                     </Link>
                   </motion.div>
                 ))}
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.25, delay: links.length * 0.04 }}
+                  className="mt-4"
+                >
+                  <LanguageSwitcher locale={locale} />
+                </motion.div>
                 <motion.a
                   href={`tel:${phone.replace(/[^\d+]/g, "")}`}
                   aria-label={phone}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.25, delay: links.length * 0.04 }}
+                  transition={{ duration: 0.25, delay: (links.length + 1) * 0.04 }}
                   className="mt-3 inline-flex items-center justify-center px-5 py-3 bg-[#B92D2D] text-white text-sm font-semibold uppercase tracking-wider hover:bg-[#D63838] transition-colors duration-300"
                 >
                   {phone}
                 </motion.a>
               </div>
+
             </motion.div>
           )}
         </AnimatePresence>
