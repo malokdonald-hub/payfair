@@ -1,12 +1,11 @@
 import type { Metadata } from "next";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import PageSection from "@/components/PageSection";
-import CtaCall from "@/components/CtaCall";
+import { LazyHeader, LazyFooter, LazyPageSection, LazyCtaCall } from "@/components/Lazy";
 import contentPl from "../../../../data/content.pl.json";
 import contentEn from "../../../../data/content.en.json";
 import contentUk from "../../../../data/content.uk.json";
 import contentRu from "../../../../data/content.ru.json";
+
+export const dynamic = "force-static";
 
 const CONTENT: Record<string, typeof contentPl> = {
   pl: contentPl,
@@ -15,14 +14,52 @@ const CONTENT: Record<string, typeof contentPl> = {
   ru: contentRu,
 };
 
+const LOCALES = ["pl", "en", "uk", "ru"] as const;
+
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   const data = CONTENT[locale] || CONTENT.pl;
+  const baseUrl = data.siteConfig.url;
+
+  const alternatesLanguages: Record<string, string> = {};
+  for (const loc of LOCALES) {
+    alternatesLanguages[loc] = `${baseUrl}/${loc}/prices`;
+  }
+  alternatesLanguages["x-default"] = `${baseUrl}/pl/prices`;
+
   return {
     title: data.prices.title,
     description: data.prices.meta_description,
+    alternates: {
+      canonical: `${baseUrl}/${locale}/prices`,
+      languages: alternatesLanguages,
+    },
+    openGraph: {
+      title: data.prices.title,
+      description: data.prices.meta_description,
+      url: `${baseUrl}/${locale}/prices`,
+      siteName: data.siteConfig.brandFull,
+      locale: locale === "pl" ? "pl_PL" : locale === "en" ? "en_US" : locale === "uk" ? "uk_UA" : "ru_RU",
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/images/og/og-default.webp`,
+          width: 1200,
+          height: 630,
+          alt: data.siteConfig.brandFull,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: data.prices.title,
+      description: data.prices.meta_description,
+      images: [`${baseUrl}/images/og/og-default.webp`],
+    },
   };
 }
+
 
 export default async function PricesPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -31,10 +68,10 @@ export default async function PricesPage({ params }: { params: Promise<{ locale:
 
   return (
     <>
-      <Header locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
-      <PageSection html={data.prices.jsx} />
-      <CtaCall locale={locale} phone={siteConfig.phone} />
-      <Footer
+      <LazyHeader locale={locale} brandName={siteConfig.brandName} phone={siteConfig.phone} />
+      <LazyPageSection html={data.prices.jsx} />
+      <LazyCtaCall locale={locale} phone={siteConfig.phone} />
+      <LazyFooter
         locale={locale}
         brandFull={siteConfig.brandFull}
         address={siteConfig.address}
@@ -45,6 +82,7 @@ export default async function PricesPage({ params }: { params: Promise<{ locale:
         facebook={siteConfig.facebook}
         linkedin={siteConfig.linkedin}
       />
+
     </>
   );
 }
