@@ -5,9 +5,6 @@ export async function generateStaticParams() {
   const locales = ['pl'];
   const slugsMap: Record<string, string[]> = {
     pl: ['prawo-karne', 'prawo-cywilne', 'prawo-rodzinne', 'prawo-gospodarcze', 'prawo-administracyjne', 'etpcz'],
-    en: ['criminal-law', 'civil-law', 'family-law', 'business-law', 'admin-law', 'echr'],
-    uk: ['kryminalne', 'cywilne', 'simeyne', 'gospodarske', 'administratyvne', 'yespl'],
-    ru: ['ugolovnoe', 'grazhdanskoe', 'semeynoe', 'hozyaystvennoe', 'administrativnoe', 'espch'],
   };
   const params = [];
   for (const locale of locales) {

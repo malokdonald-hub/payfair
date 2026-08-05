@@ -18,7 +18,7 @@ type LocaleLayoutProps = {
 
 export async function generateMetadata({ params }: LocaleLayoutProps): Promise<Metadata> {
   const { locale } = await params;
-  const content = getContent(locale);
+   const content = getContent('pl');
   const { siteConfig } = content;
   const baseUrl = siteConfig.url;
 
@@ -71,7 +71,7 @@ export async function generateMetadata({ params }: LocaleLayoutProps): Promise<M
 
 export default async function LocaleLayout({ children, params }: LocaleLayoutProps) {
   const { locale }: { locale: string } = await params;
-  const content = getContent(locale);
+  const content = getContent('pl');
   const { siteConfig } = content;
 
   return (
