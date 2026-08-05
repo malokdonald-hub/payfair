@@ -2,7 +2,7 @@ import { getContent } from '@/lib/content';
 import { notFound } from 'next/navigation';
 
 export async function generateStaticParams() {
-  const locales = ['pl', 'en', 'uk', 'ru'];
+  const locales = ['pl'];
   const slugsMap: Record<string, string[]> = {
     pl: ['prawo-karne', 'prawo-cywilne', 'prawo-rodzinne', 'prawo-gospodarcze', 'prawo-administracyjne', 'etpcz'],
     en: ['criminal-law', 'civil-law', 'family-law', 'business-law', 'admin-law', 'echr'],
