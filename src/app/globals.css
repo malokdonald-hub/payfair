@@ -37,6 +37,7 @@ body {
   font-family: var(--font-montserrat), system-ui, sans-serif;
   min-height: 100vh;
   width: 100%;
+  padding-top: 80px;
 }
 
 /* Ensure large screens (xl: 1280px+) don't let content stretch edge-to-edge */
